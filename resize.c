@@ -17,10 +17,8 @@ int main(int argc, char *argv[])
 
     // remember factor & filenames
     int factor = atoi(argv[1]);
-    char *infile = malloc(sizeof(argv[2]));
-    infile = argv[2];
-    char *outfile = malloc(sizeof(argv[3]));
-    outfile = argv[3];
+    char *infile = argv[2];
+    char *outfile = argv[3];
 
     if (factor <= 0 || factor > 100)
     {
@@ -29,8 +27,7 @@ int main(int argc, char *argv[])
     }
 
     // open input file
-    FILE *inptr;
-    inptr = fopen(infile, "r");
+    FILE *inptr = fopen(infile, "r");
     if (inptr == NULL)
     {
         fprintf(stderr, "Could not open %s.\n", infile);
@@ -38,8 +35,7 @@ int main(int argc, char *argv[])
     }
 
     // open output file
-    FILE *outptr;
-    outptr = fopen(outfile, "w");
+    FILE *outptr = fopen(outfile, "w");
     if (outptr == NULL)
     {
         fclose(inptr);
@@ -159,10 +155,6 @@ int main(int argc, char *argv[])
 
     // close outfile
     fclose(outptr);
-    free(outfile);
-    free(infile);
-    free(inptr);
-    free(outptr);
 
     // success
     return 0;
