@@ -12,12 +12,12 @@ from cs50 import get_string
 # accepts only 2 command prompt arguments, first is the program itself, second should be alphabetical key
 if len(sys.argv) != 2:
     print("Usage: ./vigenere k")
-    sys.exit(0)
+    sys.exit(1)
 
 # check if string contains only alphabetical symbols
 if sys.argv[1].isalpha() == False:
     print("Error! Please provide string of only alphabetical symbols")
-    sys.exit(0)
+    sys.exit(1)
 
 keys = sys.argv[1]
 key = []
@@ -65,5 +65,7 @@ for c in plaintext:
             # print(counter)
             counter += 1
             print(c, end='')
+    else:
+        print(c, end='')
 
 print()
