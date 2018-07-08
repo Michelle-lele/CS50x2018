@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Quote
+{% endblock %}
+
+{% block main %}
+    <table class="table table-bordered">
+        <th>Symbol</th>
+        <th>Price</th>
+        <tr>
+            <td> {{ symbol }}</td>
+            <td> {{ price }}</td>
+        </tr>
+    </table>
+{% endblock %}
