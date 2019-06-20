@@ -1,0 +1,165 @@
+{% extends "index.html" %}
+{% block body %}
+
+<!--Search-->
+	<form class="search" method="POST" action="{{ url_for('search') }}">
+        
+        <input type="text" placeholder="Search book title, author or ISBN" name="search" {% if query %} value="{{ query }}{% endif %}"/>
+        
+        <button type="submit"-><i class="fas fa-search"></i></button>
+    </form>
+
+    {% if errorMessage %}
+    <div class="card card-3 wrapper--w960">
+        <div class="card-body">
+            <h3 class="submit-error-alert center">{{ errorMessage }}</h3>
+        </div>
+    </div>
+        {% endif %}
+
+        <div class="pagination center">
+        {% if pagination_settings %}
+            {% if pagination_settings['page'] != 1 %}
+            <span class="nav_buttons"><a href="{{ url_for(request.endpoint) }}?q={{ query }}&page=1"><i class="fas fa-angle-double-left"></i></a></span>
+            {% else %}
+            <span class="nav_buttons"><i class="fas fa-angle-double-left"></i></span>
+            {% endif %}
+
+            {% if pagination_settings['previous_page'] %}    
+            <span class="nav_buttons"><a href="{{ url_for(request.endpoint) }}?q={{ query }}&page={{ pagination_settings['previous_page'] }}"><i class="fas fa-angle-left"></i></a></span>
+            {% else %}
+            <span class="nav_buttons"><i class="fas fa-angle-left"></i></span>
+            {% endif %}
+
+            <span class="title">Page {{ pagination_settings['page'] }} of {{ pagination_settings['total_pages'] }}</span>
+
+            {% if pagination_settings['next_page'] %} 
+            <span class="nav_buttons"><a href="{{ url_for(request.endpoint) }}?q={{ query }}&page={{ pagination_settings['next_page'] }}"><i class="fas fa-angle-right"></i></a></span>
+            {% else %}
+            <span class="nav_buttons"><i class="fas fa-angle-right"></i></span>
+            {% endif %}
+
+            {% if pagination_settings['total_pages'] != pagination_settings['page'] %}
+            <span class="nav_buttons"><a href="{{ url_for(request.endpoint) }}?q={{ query }}&page={{ pagination_settings['total_pages']}}"> <i class="fas fa-angle-double-right"></i> </a></span>
+            {% else %}
+            <span class="nav_buttons"><i class="fas fa-angle-double-right"></i></span>
+            {% endif %}
+        {% endif %}
+
+    </div>
+<!--Search Results-->
+    {% for page_item in page_items %}
+    <div class="card card-3 wrapper--w960">
+        <a href="{{ url_for('book') }}?isbn={{ page_item.isbn }}">
+        <div class="search-item"> 
+            {% if page_item.cover_img %}
+            <div class="card-heading-3" style="background: url({{ page_item.cover_img }}) top left/cover no-repeat;">
+            {% else %}
+            <div class="card-heading-3" style="background: url('../static/media/green_book_t.jpg') top left/cover no-repeat;">
+            {% endif %}
+            </div>
+            <div class="card-body">
+                <h2 class="title">{{ page_item.title }} ({{ page_item.year }})</h2>
+                <h3>by {{ page_item.author }}</h3>
+                <h4>ISBN: {{ page_item.isbn }}</h4>
+                {% for rating in range(page_item[0]|int) %}
+                <span class="star-selected">&#9733;</span>
+                {% endfor %}
+
+                {% for rating in range(5 - page_item[0]|int) %}
+                <span class="star-unselected">&#9733;</span>
+                {% endfor %}
+            </div>
+        </div>
+        </a>
+    </div>
+    {% endfor %}
+
+
+    <div class="pagination center">
+        {% if pagination_settings %}
+            {% if pagination_settings['page'] != 1 %}
+            <span class="nav_buttons"><a href="{{ url_for(request.endpoint) }}?q={{ query }}&page=1"><i class="fas fa-angle-double-left"></i></a></span>
+            {% else %}
+            <span class="nav_buttons"><i class="fas fa-angle-double-left"></i></span>
+            {% endif %}
+
+            {% if pagination_settings['previous_page'] %}    
+            <span class="nav_buttons"><a href="{{ url_for(request.endpoint) }}?q={{ query }}&page={{ pagination_settings['previous_page'] }}"><i class="fas fa-angle-left"></i></a></span>
+            {% else %}
+            <span class="nav_buttons"><i class="fas fa-angle-left"></i></span>
+            {% endif %}
+
+            <span class="title">Page {{ pagination_settings['page'] }} of {{ pagination_settings['total_pages'] }}</span>
+
+            {% if pagination_settings['next_page'] %} 
+            <span class="nav_buttons"><a href="{{ url_for(request.endpoint) }}?q={{ query }}&page={{ pagination_settings['next_page'] }}"><i class="fas fa-angle-right"></i></a></span>
+            {% else %}
+            <span class="nav_buttons"><i class="fas fa-angle-right"></i></span>
+            {% endif %}
+
+            {% if pagination_settings['total_pages'] != pagination_settings['page'] %}
+            <span class="nav_buttons"><a href="{{ url_for(request.endpoint) }}?q={{ query }}&page={{ pagination_settings['total_pages']}}"> <i class="fas fa-angle-double-right"></i> </a></span>
+            {% else %}
+            <span class="nav_buttons"><i class="fas fa-angle-double-right"></i></span>
+            {% endif %}
+        {% endif %}
+
+    </div>
+
+<!--Top Rated Books-->
+{% if not page_items %}
+    <h2 class="title center"> TOP 3 Rated books</h2>
+    {% for top_rated_book in top_rated_books %}
+    <div class="card card-3 wrapper--w960">
+        <a href="{{ url_for('book') }}?isbn={{ top_rated_book.isbn }}">
+        <div class="search-item"> 
+            {% if top_rated_book.cover_img %}
+            <div class="card-heading-3" style="background: url({{ top_rated_book.cover_img }}) top left/cover no-repeat;">
+            {% else %}
+            <div class="card-heading-3" style="background: url('../static/media/green_book_t.jpg') top left/cover no-repeat;">
+            {% endif %}
+            </div>
+            <div class="card-body">
+                <h2 class="title">{{ top_rated_book.title }} ({{ top_rated_book.year }})</h2>
+                <h3>by {{ top_rated_book.author }}</h3>
+                <h4>ISBN: {{ top_rated_book.isbn }}</h4>
+
+                {% for rating in range(top_rated_book[0]|int) %}
+                <span class="star-selected">&#9733;</span>
+                {% endfor %}
+
+                {% for rating in range(5 - top_rated_book[0]|int) %}
+                <span class="star-unselected">&#9733;</span>
+                {% endfor %}
+            </div>
+        </div>
+        </a>
+    </div>
+    {% endfor %}
+{% endif %}
+
+<!--Latest Reviews-->
+<!--
+{% if not page_items %}
+    <h1 class="title center">Latest Reviews</h1>
+    {% for latest_review in latest_reviews %}
+    <div class="review card card-3 wrapper--w960">
+        <div class="card-heading">
+            {% for rating in range(latest_review.rating) %}
+            <span class="star-selected">&#9733;</span>
+            {% endfor %}
+            {% for rating in range(5 - latest_review.rating) %}
+            <span class="star-unselected">&#9733;</span>
+            {% endfor %}
+            <h2 class="title"> by {{ latest_review.username }}</h2>
+        </div>
+        <div class="card-body">
+                <p>{{ latest_review.review_text }}</p>
+        </div>
+    </div>
+    {% endfor %}
+{% endif %}
+-->
+
+{% endblock %}
